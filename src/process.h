@@ -28,6 +28,8 @@
 #include "connection.h"
 
 extern bool tracemode;
+extern bool csv;
+extern char csv_file[];
 extern bool bughuntmode;
 
 void check_all_procs();

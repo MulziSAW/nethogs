@@ -32,6 +32,10 @@
 #include <ncurses.h>
 #include "nethogs.h"
 #include "process.h"
+#include <time.h>
+#include <iostream>
+#include <fstream>
+using namespace std;
 
 std::string *caption;
 extern const char version[];
@@ -49,6 +53,7 @@ extern bool showcommandline;
 
 extern unsigned refreshlimit;
 extern unsigned refreshcount;
+extern time_t refreshdelay;
 
 #define PID_MAX 4194303
 
@@ -85,6 +90,7 @@ public:
 
   void show(int row, unsigned int proglen, unsigned int devlen);
   void log();
+  void write_to_csv(long int epoch, char *local_time, ofstream& myfile);
 
   double sent_value;
   double recv_value;
@@ -220,6 +226,12 @@ void Line::log() {
   std::cout << '/' << m_pid << '/' << m_uid << "\t" << sent_value << "\t" << recv_value << std::endl;
 }
 
+void Line::write_to_csv(long int epoch, char *local_time, ofstream& myfile) {
+  myfile << epoch << "," << local_time << "," << m_name << ",";
+  myfile << m_pid << "," << uid2username(m_uid) << ",";
+  myfile << sent_value*refreshdelay << "," << recv_value*refreshdelay << "\n";
+}
+
 int get_devlen(Line *lines[], int nproc, int rows)
 {
   int devlen = MIN_COLUMN_WIDTH_DEV; int curlen;
@@ -306,6 +318,26 @@ void ui_tick() {
     /* switch mode: total vs kb/s */
     viewMode = (viewMode + 1) % VIEWMODE_COUNT;
     break;
+  }
+}
+
+void write_csv(Line *lines[], int nproc) {
+  long int epoch = static_cast<long int> (time(NULL));
+  char buf[25];
+  time_t rawtime;
+  struct tm * timeinfo;
+  time (&rawtime);
+  timeinfo = localtime (&rawtime);
+  strftime(buf, sizeof(buf), "%FT%T%z", timeinfo);
+  std::cout << buf;
+  std::cout << " Write to csv file\n";
+  ofstream myfile;
+  myfile.open(csv_file, ios::app);
+
+  /* print them */
+  for (int i = 0; i < nproc; i++) {
+    lines[i]->write_to_csv(epoch, buf, myfile);
+    delete lines[i];
   }
 }
 
@@ -441,6 +473,8 @@ void do_refresh() {
 
   if (tracemode || DEBUG)
     show_trace(lines, nproc);
+  else if (csv)
+    write_csv(lines, nproc);
   else
     show_ncurses(lines, nproc);
 

@@ -67,7 +67,7 @@ void quit_cb(int /* i */) {
 }
 
 void forceExit(bool success, const char *msg, ...) {
-  if ((!tracemode) && (!DEBUG)) {
+  if ((!tracemode) && (!DEBUG) && (!csv)) {
     exit_ui();
   }
 
@@ -128,7 +128,7 @@ void clean_up() {
   }
 
   procclean();
-  if ((!tracemode) && (!DEBUG))
+  if ((!tracemode) && (!DEBUG) && (!csv))
     exit_ui();
 }
 
@@ -139,7 +139,7 @@ int main(int argc, char **argv) {
   char *filter = NULL;
 
   int opt;
-  while ((opt = getopt(argc, argv, "Vhbtpsd:v:c:laf:C")) != -1) {
+  while ((opt = getopt(argc, argv, "Vhbtpsd:v:c:laf:Cz:")) != -1) {
     switch (opt) {
     case 'V':
       versiondisplay();
@@ -181,6 +181,10 @@ int main(int argc, char **argv) {
     case 'C':
       catchall = true;
       break;
+    case 'z':
+      csv = true;
+      strcpy(csv_file, optarg);
+      break;
     default:
       help(true);
       exit(EXIT_FAILURE);
@@ -193,7 +197,7 @@ int main(int argc, char **argv) {
     forceExit(false, "No devices to monitor. Use '-a' to allow monitoring "
                      "loopback interfaces or devices that are not up/running");
 
-  if ((!tracemode) && (!DEBUG)) {
+  if ((!tracemode) && (!DEBUG) && (!csv)) {
     init_ui();
   }
 
@@ -310,7 +314,7 @@ int main(int argc, char **argv) {
     time_t const now = ::time(NULL);
     if (last_refresh_time + refreshdelay <= now) {
       last_refresh_time = now;
-      if ((!DEBUG) && (!tracemode)) {
+      if ((!DEBUG) && (!tracemode) && (!csv)) {
         // handle user input
         ui_tick();
       }

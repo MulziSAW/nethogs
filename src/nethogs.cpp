@@ -56,6 +56,8 @@ unsigned refreshlimit = 0;
 unsigned refreshcount = 0;
 unsigned processlimit = 0;
 bool tracemode = false;
+bool csv;
+char csv_file[250];
 bool bughuntmode = false;
 // sort on sent or received?
 bool sortRecv = true;
