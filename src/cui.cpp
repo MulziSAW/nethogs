@@ -330,7 +330,7 @@ void write_csv(Line *lines[], int nproc) {
   struct tm * timeinfo;
   time (&rawtime);
   timeinfo = localtime (&rawtime);
-  strftime(buf, sizeof(buf), "%FT%T%z", timeinfo);
+  strftime(buf, sizeof(buf), "%FT%T", timeinfo);
   std::cout << buf;
   std::cout << " Write to csv file\n";
   ofstream myfile;
