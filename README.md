@@ -24,7 +24,7 @@ For a service, add this to `/etc/systemd/system/nethogs.service`:
     Type=simple
     Restart=always
     RestartSec=1
-    ExecStart=/usr/local/sbin/nethogs -d 60 -z /home/mulzisaw/nethogs.csv
+    ExecStart=/usr/local/sbin/nethogs -d 60 -z /path/to/.csv
     
     [Install]
     WantedBy=multi-user.target
