@@ -10,11 +10,11 @@ This is my fork of the NetHogs program. It has support for csv export.
 
 Usage for logging every 60s:
 
-    `nethogs -d 60 -z /path/to/.csv`. 
+    nethogs -d 60 -z /path/to/.csv
 
-The csv columes are epoch,local_time,process,pid,user,sent(kB),received(kB)
+The csv columes are `epoch,local_time,process,pid,user,sent(kB),received(kB)`
 
-For a service, add this to `/etc/systemd/system/nethogs.service`
+For a service, add this to `/etc/systemd/system/nethogs.service`:
 
     [Unit]
     Description=Service for continous nethogs logging
