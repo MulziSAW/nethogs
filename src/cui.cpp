@@ -228,7 +228,7 @@ void Line::log() {
 
 void Line::write_to_csv(long int epoch, char *local_time, ofstream& myfile) {
   if ((sent_value != 0) || (recv_value != 0)) {
-    myfile << epoch << "," << local_time << "," << m_name << ",";
+    myfile << epoch << "," << local_time << "," << refreshdelay << "," << m_name << ",";
     myfile << m_pid << "," << uid2username(m_uid) << ",";
     myfile << sent_value*refreshdelay << "," << recv_value*refreshdelay << "\n";
   }

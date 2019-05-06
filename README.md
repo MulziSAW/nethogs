@@ -12,7 +12,7 @@ Usage for logging every 60s:
 
     nethogs -d 60 -z /path/to/.csv
 
-The csv columes are `epoch,local_time,process,pid,user,sent(kB),received(kB)`
+The csv columes are `epoch,local_time,interval,process,pid,user,sent(kB),received(kB)`
 
 For a service, add this to `/etc/systemd/system/nethogs.service`:
 
